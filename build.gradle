@@ -19,10 +19,10 @@ configurations {
     }
 }
 
-repositories {
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
-}
+//repositories {
+//    mavenCentral()
+//    maven { url 'https://jitpack.io' }
+//}
 
 dependencies {
 //    implementation 'com.github.shoppingmall-platform:common-library:v0.0.2'
