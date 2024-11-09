@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: token-service
+  jpa:
+    show-sql: true
+    open-in-view: false
+
+  profiles:
+    active: dev
+
+server:
+  port: 8082
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+logging:
+  level:
+    root: debug
