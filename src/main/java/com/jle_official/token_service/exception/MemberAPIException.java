@@ -1,6 +1,5 @@
 package com.jle_official.token_service.exception;
 
-import com.jle_official.token_service.service.dto.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
