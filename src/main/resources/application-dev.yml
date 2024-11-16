@@ -12,7 +12,11 @@ data:
     password:
 
 jwt:
-  secret: TestSecret
-  expiration:
-    access:
-    refresh: 1000 * 60 * 60 * 24 * 7
+  private-key: |
+    -----BEGIN PRIVATE KEY-----
+    TEST_PRIVATE_KEY_BASE64_ENCODED
+    ——END PRIVATE KEY——
+  public-key: |
+    -----BEGIN PUBLIC KEY-----
+    TEST_PUBLIC_KEY_BASE64_ENCODED
+    ——END PUBLIC KEY——
