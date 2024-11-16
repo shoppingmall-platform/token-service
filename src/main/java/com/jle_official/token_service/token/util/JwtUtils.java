@@ -75,23 +75,23 @@ public class JwtUtils {
         }
     }
 
-    public static String generateAccessToken(String userId) {
+    public static String generateAccessToken(String memberId) {
         Map<String, String> header = new HashMap<>();
         header.put("alg", "RS256");
         header.put("typ", "JWT");
 
         return Jwts.builder()
                 .header().add(header).and()
-                .subject(userId)
+                .subject(memberId)
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + EXPIRATION_TIME_MS_ACCESS))
                 .signWith(getPrivateKey(), Jwts.SIG.RS256)
                 .compact();
     }
 
-    public static String generateRefreshToken(String userId) {
+    public static String generateRefreshToken(String memberId) {
         return Jwts.builder()
-                .subject(userId)
+                .subject(memberId)
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + EXPIRATION_TIME_MS_REFRESH))
                 .signWith(getPrivateKey())
@@ -119,7 +119,7 @@ public class JwtUtils {
     }
 
 
-    public static String extractUserId(String token) {
+    public static String extractMemberId(String token) {
         return getClaims(token).getPayload().getSubject();
     }
 
