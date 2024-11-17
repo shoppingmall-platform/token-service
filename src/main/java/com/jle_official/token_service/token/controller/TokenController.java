@@ -25,4 +25,13 @@ public class TokenController {
         return new LoginResponse(token);
     }
 
+    @PostMapping("/refresh")
+    public Token refresh(@RequestHeader String accessToken, @RequestHeader String refreshToken) {
+        return tokenService.reissueToken(accessToken, refreshToken);
+    }
+
+    @PostMapping("/logout")
+    public void logout(@RequestHeader String accessToken) {
+        tokenService.blackListToken(accessToken);
+    }
 }

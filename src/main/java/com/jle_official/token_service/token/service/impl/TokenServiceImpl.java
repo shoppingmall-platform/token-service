@@ -41,16 +41,16 @@ public class TokenServiceImpl implements TokenService {
         String storedToken = redisDao.getToken(memberId);
 
         if (JwtUtils.validateToken(refreshToken, storedToken)) {
-            blackListToken(accessToken, refreshToken);
+            blackListToken(accessToken);
             return issueToken(memberId);
         } else {
             throw new InvalidRefreshToken();
         }
     }
 
-    private void blackListToken(String accessToken, String refreshToken) {
+    public void blackListToken(String accessToken) {
         redisDao.saveToken(accessToken, "", JwtUtils.extractExpirationTime(accessToken));
-        redisDao.deleteToken(JwtUtils.extractMemberId(refreshToken));
+        redisDao.deleteToken(JwtUtils.extractMemberId(accessToken));
     }
 
     private Token issueToken(String id) {

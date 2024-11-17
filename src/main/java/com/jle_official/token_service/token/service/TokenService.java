@@ -7,4 +7,6 @@ public interface TokenService {
 
     Token reissueToken(String accessToken, String refreshToken);
 
+    void blackListToken(String accessToken);
+
 }
