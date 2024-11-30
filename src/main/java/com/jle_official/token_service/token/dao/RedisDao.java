@@ -15,13 +15,6 @@ public class RedisDao {
         redisTemplate.opsForValue().set(key, value, duration);
     }
 
-    public boolean hasToken(String key) {
-        if (key == null) {
-            return false;
-        }
-        return redisTemplate.hasKey(key);
-    }
-
     public String getToken(String key) {
         if (key == null) {
             return null;

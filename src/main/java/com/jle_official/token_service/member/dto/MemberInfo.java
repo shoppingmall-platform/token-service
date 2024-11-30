@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 public class MemberInfo {
     private Long memberId;
+    private String id;
     private String name;
     private String email;
     private LocalDate birthday;
@@ -17,5 +18,5 @@ public class MemberInfo {
     private String level;
     private String region;
     private LocalDateTime createAt;
-    private Role role;
+    private String authority;
 }

@@ -1,4 +1,4 @@
-package com.jle_official.token_service.global.exception;
+package com.jle_official.token_service.common.exception;
 
 import org.springframework.http.HttpStatus;
 
