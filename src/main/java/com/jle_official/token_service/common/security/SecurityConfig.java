@@ -50,7 +50,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/v1/token/**").permitAll()
+                                .requestMatchers("/v1/token/**", "/swagger-ui").permitAll()
                 )
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
                 .formLogin(AbstractHttpConfigurer::disable)
