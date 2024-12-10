@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor
 public class MemberAdapter {
-    private final static String MEMBER_API_URL = "https://localhost:8091/v1/members/";
+    private final static String MEMBER_API_URL = "http://localhost:8091/v1/members";
     private final RestTemplate restTemplate;
 
     public String getMemberCredential(String loginId) {
@@ -19,7 +19,7 @@ public class MemberAdapter {
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                MEMBER_API_URL+loginId,
+                MEMBER_API_URL+"/credential/"+loginId,
                 HttpMethod.GET,
                 request,
                 String.class
@@ -37,7 +37,7 @@ public class MemberAdapter {
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         ResponseEntity<MemberInfo> response = restTemplate.exchange(
-                MEMBER_API_URL+loginId,
+                MEMBER_API_URL+"/"+loginId,
                 HttpMethod.GET,
                 request,
                 MemberInfo.class

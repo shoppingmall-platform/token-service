@@ -1,5 +1,6 @@
 package com.jle_official.token_service.token.util;
 
+import com.jle_official.token_service.member.dto.MemberInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -74,14 +75,15 @@ public class JwtUtils {
         }
     }
 
-    public String generateAccessToken(String memberId) {
+    public String generateAccessToken(MemberInfo memberInfo) {
         Map<String, String> header = new HashMap<>();
         header.put("alg", "RS256");
         header.put("typ", "JWT");
 
         return Jwts.builder()
                 .header().add(header).and()
-                .subject(memberId)
+                .subject(memberInfo.getId())
+                .claim("role", memberInfo.getAuthority())
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + EXPIRATION_TIME_MS_ACCESS))
                 .signWith(getPrivateKey(), Jwts.SIG.RS256)

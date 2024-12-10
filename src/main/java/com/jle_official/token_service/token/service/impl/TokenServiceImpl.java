@@ -21,11 +21,13 @@ public class TokenServiceImpl implements TokenService {
     private final MemberAdapter memberAdapter;
 
     @Override
-    public Token issueJwt(PrincipalDetails principalDetails) {
+    public Token issueJwt(MemberInfo memberInfo) {
+        String accessToken = jwtUtils.generateAccessToken(memberInfo);
+        String refreshToken = jwtUtils.generateRefreshToken(memberInfo.getId());
+        Duration expiration = jwtUtils.extractExpirationTime(refreshToken);
 
-//        MemberInfo memberInfo = memberAdapter.getMemberInfo(principalDetails.getUsername());
-//        return issueToken(String.valueOf(memberInfo.getMemberId()));
-        return issueToken(principalDetails.getUsername());
+        redisDao.saveToken(memberInfo.getId(), refreshToken, expiration);
+        return new Token(accessToken, refreshToken);
     }
 
     @Override
@@ -35,7 +37,8 @@ public class TokenServiceImpl implements TokenService {
 
         if (jwtUtils.validateToken(refreshToken, storedToken)) {
             blackListToken(accessToken, "refresh");
-            return issueToken(memberId);
+            MemberInfo memberInfo = memberAdapter.getMemberInfo(memberId);
+            return issueJwt(memberInfo);
         } else {
             throw new InvalidRefreshToken();
         }
@@ -45,15 +48,6 @@ public class TokenServiceImpl implements TokenService {
     public void blackListToken(String accessToken, String type) {
         redisDao.saveToken(accessToken, "", jwtUtils.extractExpirationTime(accessToken));
         redisDao.deleteToken(jwtUtils.extractMemberId(accessToken));
-    }
-
-    private Token issueToken(String id) {
-        String accessToken = jwtUtils.generateAccessToken(id);
-        String refreshToken = jwtUtils.generateRefreshToken(id);
-        Duration expiration = jwtUtils.extractExpirationTime(refreshToken);
-
-        redisDao.saveToken(id, refreshToken, expiration);
-        return new Token(accessToken, refreshToken);
     }
 
 

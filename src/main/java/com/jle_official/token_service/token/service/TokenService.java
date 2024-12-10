@@ -1,10 +1,10 @@
 package com.jle_official.token_service.token.service;
 
-import com.jle_official.token_service.common.security.PrincipalDetails;
+import com.jle_official.token_service.member.dto.MemberInfo;
 import com.jle_official.token_service.token.dto.Token;
 
 public interface TokenService {
-    Token issueJwt(PrincipalDetails principalDetails);
+    Token issueJwt(MemberInfo memberInfo);
 
     Token reissueToken(String accessToken, String refreshToken);
 

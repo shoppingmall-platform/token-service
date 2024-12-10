@@ -13,6 +13,10 @@ public class PrincipalDetails implements UserDetails {
     private final MemberInfo memberInfo;
     private final String password;
 
+    public MemberInfo getMemberInfo() {
+        return memberInfo;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

@@ -1,4 +1,4 @@
-package com.jle_official.token_service.common.security;
+package com.jle_official.token_service.token.handler;
 
 import com.jle_official.token_service.common.exception.LogoutFailedException;
 import com.jle_official.token_service.token.service.TokenService;
