@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-            DOCKER_IMAGE = 'qaw32/jle-token-service:latest'
+            DOCKER_IMAGE = 'codethestudent/jle-token-service:latest'
     }
 
     stages {
