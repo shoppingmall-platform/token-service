@@ -1,0 +1,17 @@
+### login
+POST http://localhost:8082/v1/token/login
+Content-Type: application/x-www-form-urlencoded
+
+username=qaw&password=1234
+
+### refresh
+POST http://localhost:8082/v1/token/refresh
+Content-Type: application/json
+Authorization: Bearer
+Cookie: refreshToken=
+
+### logout
+POST http://localhost:8082/v1/token/logout
+Content-Type: application/json
+Authorization: Bearer
+Cookie: refreshToken=
