@@ -8,6 +8,5 @@ jwt:
   private-key:
   public-key:
 
-
 service:
-  host: localhost
+  host:
