@@ -2,13 +2,51 @@ pipeline {
     agent any
 
     environment {
-            DOCKER_IMAGE = 'qaw32/jle-token-service:latest'
+            DOCKER_IMAGE = 'codethestudent/jle-token-service:latest'
     }
 
     stages {
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: 'https://github.com/shoppingmall-platform/token-service.git'
+            }
+        }
+
+        stage('Update application') {
+            steps {
+                script {
+                    sh """
+                    echo "> application 파일 위치로 이동"
+                    cd /var/lib/jenkins/workspace/token-service/src/main/resources
+
+                    echo "> application 서버전용 yml 변경"
+                    sed -i "s#\\\${DB_HOST}#${DB_HOST}#" application-dev.yml
+                    sed -i "s#\\\${JWT_PRIVATE_KEY}#${JWT_PRIVATE_KEY}#" application-dev.yml
+                    sed -i "s#\\\${JWT_PUBLIC_KEY}#${JWT_PUBLIC_KEY}#" application-dev.yml
+                    sed -i "s#\\\${SERVER_HOST}#${SERVER_HOST}#" application-dev.yml
+
+                    sed -i "s#\\\${DB_HOST}#${DB_HOST}#" application-prod.yml
+                    sed -i "s#\\\${JWT_PRIVATE_KEY}#${JWT_PRIVATE_KEY}#" application-prod.yml
+                    sed -i "s#\\\${JWT_PUBLIC_KEY}#${JWT_PUBLIC_KEY}#" application-prod.yml
+                    sed -i "s#\\\${SERVER_HOST}#${SERVER_HOST}#" application-prod.yml
+                    """
+                }
+            }
+        }
+
+        stage('Build Application') {
+            steps {
+                script {
+                    sh """
+                    echo "> 빌드할 위치로 이동"
+                    cd /var/lib/jenkins/workspace/token-service
+
+                    echo "> 권한 추가 및 클린 빌드"
+                    sudo chmod 777 ./gradlew
+                    sudo ./gradlew clean
+                    sudo ./gradlew build
+                    """
+                }
             }
         }
 

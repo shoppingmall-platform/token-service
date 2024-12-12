@@ -21,7 +21,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # 빌드 스테이지에서 생성된 jar 파일 복사
-COPY --from=build /app/build/libs/*SNAPSHOT.jar app.jar
+COPY --from=build /app/build/libs/*SNAPSHOT.jar token.jar
 
 # 포트 8090 열기
 EXPOSE 8082
@@ -30,4 +30,4 @@ EXPOSE 8082
 ENV SPRING_PROFILES_ACTIVE=dev
 
 # 애플리케이션 실행
-CMD ["java", "-jar", "app.jar", "--spring.profiles.active=dev"]
+CMD ["java", "-jar", "token.jar", "--spring.profiles.active=dev"]

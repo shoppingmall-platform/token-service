@@ -1,13 +1,12 @@
 data:
   redis:
-    host: localhost
+    host: ${DB_HOST}
     port: 6379
     password:
 
 jwt:
-  private-key:
-  public-key:
-
+  private-key: ${JWT_PRIVATE_KEY}
+  public-key: ${JWT_PUBLIC_KEY}
 
 service:
-  host: localhost
+  host: ${SERVER_HOST}
