@@ -17,7 +17,7 @@ pipeline {
                 script {
                     sh """
                     echo "> application 파일 위치로 이동"
-                    cd /var/lib/jenkins/workspace/token-service/src/main/resources
+                    cd src/main/resources
 
                     echo "> application 서버전용 yml 변경"
                     sed -i "s#\\\${DB_HOST}#${DB_HOST}#" application-dev.yml
