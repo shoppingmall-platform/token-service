@@ -38,9 +38,6 @@ pipeline {
             steps {
                 script {
                     sh """
-                    echo "> 빌드할 위치로 이동"
-                    cd /var/lib/jenkins/workspace/token-service
-
                     echo "> 권한 추가 및 클린 빌드"
                     sudo chmod 777 ./gradlew
                     sudo ./gradlew clean
