@@ -1,9 +1,8 @@
 package com.jle_official.token_service.token.service.impl;
 
-import com.jle_official.token_service.common.exception.InvalidRefreshToken;
+import com.jle_official.token_service.common.exception.InvalidToken;
 import com.jle_official.token_service.member.adaptor.MemberAdapter;
 import com.jle_official.token_service.member.dto.MemberInfo;
-import com.jle_official.token_service.common.security.PrincipalDetails;
 import com.jle_official.token_service.token.dao.RedisDao;
 import com.jle_official.token_service.token.dto.Token;
 import com.jle_official.token_service.token.service.TokenService;
@@ -40,7 +39,7 @@ public class TokenServiceImpl implements TokenService {
             MemberInfo memberInfo = memberAdapter.getMemberInfo(memberId);
             return issueJwt(memberInfo);
         } else {
-            throw new InvalidRefreshToken();
+            throw new InvalidToken();
         }
     }
 
