@@ -31,11 +31,10 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Token reissueToken(String accessToken, String refreshToken) {
-        String memberId = jwtUtils.extractMemberId(accessToken);
+        String memberId = jwtUtils.extractMemberId(refreshToken);
         String storedToken = redisDao.getToken(memberId);
 
         if (jwtUtils.validateToken(refreshToken, storedToken)) {
-            blackListToken(accessToken, "refresh");
             MemberInfo memberInfo = memberAdapter.getMemberInfo(memberId);
             return issueJwt(memberInfo);
         } else {
@@ -45,7 +44,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public void blackListToken(String accessToken, String type) {
-        redisDao.saveToken(accessToken, "", jwtUtils.extractExpirationTime(accessToken));
+        redisDao.saveToken(accessToken, type, jwtUtils.extractExpirationTime(accessToken));
         redisDao.deleteToken(jwtUtils.extractMemberId(accessToken));
     }
 

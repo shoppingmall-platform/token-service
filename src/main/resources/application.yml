@@ -15,6 +15,11 @@ server:
       charset: UTF-8
       force: true
 
-logging:
-  level:
-    root: debug
+jle:
+  jwt:
+    access-token:
+      name: at
+      expires-minute: 15
+    refresh-token:
+      name: rt
+      expires-day: 7

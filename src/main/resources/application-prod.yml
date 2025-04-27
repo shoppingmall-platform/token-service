@@ -1,8 +1,9 @@
-data:
-  redis:
-    host: ${REDIS_HOST}
-    port: 6379
-    password:
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+      password:
 
 jwt:
   private-key: ${JWT_PRIVATE_KEY}

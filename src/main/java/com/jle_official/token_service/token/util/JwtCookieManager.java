@@ -5,18 +5,24 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Optional;
 
 @Component
 public class JwtCookieManager {
 
-    @Value("${jwt.access-token-expires}")
-    private int ACCESS_TOKEN_EXPIRES;
-    @Value("${jwt.refresh-token-expires}")
-    private int REFRESH_TOKEN_EXPIRES;
+    @Value("${jle.jwt.refresh-token.expires-day}")
+    private int cookieExpires;
+
+    @Value("${jle.jwt.access-token.name}")
+    private String accessTokenName;
+
+    @Value("${jle.jwt.refresh-token.name}")
+    private String refreshTokenName;
 
     public Optional<String> extractTokenFromCookies(HttpServletRequest request, String cookieName) {
         if (request.getCookies() == null) {
@@ -32,13 +38,26 @@ public class JwtCookieManager {
     }
 
     public void setTokenCookie(HttpServletResponse response, Token token) {
-        response.addHeader("Set-Cookie", "AT=" + token.getAccessToken() + "; Path=/;  Max-Age=" + ACCESS_TOKEN_EXPIRES + "; SameSite=Strict");
-        response.addHeader("Set-Cookie", "RT=" + token.getRefreshToken() + "; Path=/; Max-Age=" + REFRESH_TOKEN_EXPIRES + "; HttpOnly; SameSite=Strict");
-        response.setStatus(HttpStatus.OK.value());
+        ResponseCookie accessTokenCookie = ResponseCookie.from(accessTokenName, token.accessToken())
+                .path("/")
+                .maxAge(Duration.ofDays(cookieExpires))
+                .sameSite("Strict")
+                .build();
+
+        ResponseCookie refreshTokenCookie = ResponseCookie.from(refreshTokenName, token.refreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.ofDays(cookieExpires))
+                .sameSite("Strict")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
     }
 
     public void clearTokenCookie(HttpServletResponse response) {
-        response.addHeader("Set-Cookie", "AT=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict");
-        response.addHeader("Set-Cookie", "RT=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict");
+        response.addHeader(HttpHeaders.SET_COOKIE, accessTokenName+"=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict");
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenName+"=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict");
     }
 }

@@ -26,8 +26,15 @@ import java.util.Collections;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtLogoutHandler jwtLogoutHandler;
     private final TokenService tokenService;
     private final JwtCookieManager jwtCookieManager;
+
+    private final static String[] allowedUrls = {
+            "/login",
+            "/refresh",
+            "/logout"
+    };
 
     @Value("${jle.host}")
     private String host;
@@ -59,7 +66,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/v1/token/**", "/swagger-ui").permitAll()
+                                .requestMatchers(allowedUrls).permitAll()
                 )
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -75,12 +82,12 @@ public class SecurityConfig {
                 jwtCookieManager
         );
 
-        jwtAuthenticationFilter.setFilterProcessesUrl("/v1/token/login");
+        jwtAuthenticationFilter.setFilterProcessesUrl(allowedUrls[0]);
         http
                 .addFilterAt(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
-                        .logoutUrl("/v1/token/logout")
-                        .addLogoutHandler(new JwtLogoutHandler(tokenService, jwtCookieManager))
+                        .logoutUrl(allowedUrls[2])
+                        .addLogoutHandler(jwtLogoutHandler)
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             response.setStatus(HttpStatus.OK.value());
