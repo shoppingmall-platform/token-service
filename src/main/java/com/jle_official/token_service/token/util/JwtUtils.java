@@ -1,5 +1,6 @@
 package com.jle_official.token_service.token.util;
 
+import com.jle_official.token_service.common.exception.InvalidToken;
 import com.jle_official.token_service.member.dto.MemberInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -113,10 +114,14 @@ public class JwtUtils {
     }
 
     public Jws<Claims> getClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getPublicKey())
-                .build()
-                .parseSignedClaims(token);
+        try {
+            return Jwts.parser()
+                    .verifyWith(getPublicKey())
+                    .build()
+                    .parseSignedClaims(token);
+        } catch (Exception e) {
+            throw new InvalidToken();
+        }
     }
 
 

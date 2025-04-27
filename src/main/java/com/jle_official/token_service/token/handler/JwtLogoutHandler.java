@@ -6,6 +6,7 @@ import com.jle_official.token_service.token.util.JwtCookieManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -17,17 +18,20 @@ public class JwtLogoutHandler implements LogoutHandler {
     private final TokenService tokenService;
     private final JwtCookieManager jwtCookieManager;
 
+    @Value("${jle.jwt.access-token.name}")
+    private String accessTokenName;
+
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         try {
-            String accessToken = jwtCookieManager.extractTokenFromCookies(request, "AT").orElse(null);
+            String accessToken = jwtCookieManager.extractTokenFromCookies(request, accessTokenName).orElse(null);
 
             if (accessToken != null) {
                 tokenService.blackListToken(accessToken, "logout");
             }
 
         } catch (Exception e) {
-            throw new LogoutException(e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new LogoutException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

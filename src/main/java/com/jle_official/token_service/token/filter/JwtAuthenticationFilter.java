@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
@@ -73,8 +74,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         log.debug("[successfulAuthentication]");
-        log.debug("    access token= {}", token.accessToken());
-        log.debug("    refresh token= {}", token.refreshToken());
+        log.debug("- access token= {}", token.accessToken());
+        log.debug("- refresh token= {}", token.refreshToken());
 
     }
 

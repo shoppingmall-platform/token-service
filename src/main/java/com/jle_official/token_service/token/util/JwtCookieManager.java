@@ -18,6 +18,12 @@ public class JwtCookieManager {
     @Value("${jle.jwt.refresh-token.expires-day}")
     private int cookieExpires;
 
+    @Value("${jle.jwt.access-token.name}")
+    private String accessTokenName;
+
+    @Value("${jle.jwt.refresh-token.name}")
+    private String refreshTokenName;
+
     public Optional<String> extractTokenFromCookies(HttpServletRequest request, String cookieName) {
         if (request.getCookies() == null) {
             return Optional.empty();
@@ -32,13 +38,13 @@ public class JwtCookieManager {
     }
 
     public void setTokenCookie(HttpServletResponse response, Token token) {
-        ResponseCookie accessTokenCookie = ResponseCookie.from("at", token.accessToken())
+        ResponseCookie accessTokenCookie = ResponseCookie.from(accessTokenName, token.accessToken())
                 .path("/")
                 .maxAge(Duration.ofDays(cookieExpires))
                 .sameSite("Strict")
                 .build();
 
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("rt", token.refreshToken())
+        ResponseCookie refreshTokenCookie = ResponseCookie.from(refreshTokenName, token.refreshToken())
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
@@ -51,7 +57,7 @@ public class JwtCookieManager {
     }
 
     public void clearTokenCookie(HttpServletResponse response) {
-        response.addHeader(HttpHeaders.SET_COOKIE, "at=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict");
-        response.addHeader(HttpHeaders.SET_COOKIE, "rt=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict");
+        response.addHeader(HttpHeaders.SET_COOKIE, accessTokenName+"=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict");
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenName+"=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict");
     }
 }

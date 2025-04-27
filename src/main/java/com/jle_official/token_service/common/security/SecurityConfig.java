@@ -26,6 +26,7 @@ import java.util.Collections;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtLogoutHandler jwtLogoutHandler;
     private final TokenService tokenService;
     private final JwtCookieManager jwtCookieManager;
 
@@ -86,7 +87,7 @@ public class SecurityConfig {
                 .addFilterAt(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                         .logoutUrl(allowedUrls[2])
-                        .addLogoutHandler(new JwtLogoutHandler(tokenService, jwtCookieManager))
+                        .addLogoutHandler(jwtLogoutHandler)
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             response.setStatus(HttpStatus.OK.value());

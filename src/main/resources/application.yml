@@ -18,6 +18,8 @@ server:
 jle:
   jwt:
     access-token:
+      name: at
       expires-minute: 15
     refresh-token:
+      name: rt
       expires-day: 7
