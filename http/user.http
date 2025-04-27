@@ -1,0 +1,17 @@
+### 계정 추가
+POST http://localhost:8080/v1/members
+Content-Type: application/json
+
+{
+  "id": "test",
+  "password": "1234",
+  "name": "test",
+  "email": "test@test.com",
+  "birthday": "2025-03-05",
+  "phoneNumber": "010-1111-1111",
+  "gender": "FEMALE",
+  "region": "",
+  "tosAgreement": true,
+  "privacyAgreement": true,
+  "marketingAgreement": true
+}

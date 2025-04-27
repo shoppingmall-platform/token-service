@@ -1,12 +1,55 @@
-data:
-  redis:
-    host: ${DB_HOST}
-    port: 6379
-    password:
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
 
+#개발환경에서만 쓰는 설정
 jwt:
-  private-key: ${JWT_PRIVATE_KEY}
-  public-key: ${JWT_PUBLIC_KEY}
+  private-key: -----BEGIN PRIVATE KEY-----
+    MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCthQbrfsHMFatQ
+    0tvcwo9ie8W6pOnf9qQ2fY0AsPGHRNRTnOUHFIlKOwNC4SpF9h2+aLM7LNsoY2Eu
+    kzlzG5kWnwpNC9NAoXtrKajLhnyxLPMoAFI6ph+WhIA1XWPri6/h7c1JTFRx3QH9
+    6uZMpLaSrVFYu4SdW48oDNE30V9Vk1OAx8ZJaxG/PKYvps56prX+GojKOv567IWc
+    dpsw6PgVlKn3SiYz3qY0yC+ydgrqUL9z8CA94NJhqg7LO9Fu7u33z5e8m3dKRUei
+    G0xUfP/xEzOy6rAienkm9XzXFdgj6O78olMuwO/d/yZQKD2P8becWQcAH6YcuX+T
+    KLvUDmCXAgMBAAECggEAI+ajnWLPBwIuvVy7J6xLjVVNfkXzq6Z0qF+Gpm91sYaQ
+    pbIPAs2BcE3QaWx72hjHY6d2+dXYjD0vlLraRpIdtPv33iQFs9gVWIE4js+HCgNi
+    VdLnMIJBg9trSV9GtqvimoygjjtQN3TCHj6VIqNrsOJSM9ksYYBZmLA6M2HK50Hq
+    aWBcQe60MM+w3wkh0L0kZ32GVAB5jZdXyMw0KN+NXMSKQjaIi7TXDbiGt164nPka
+    q9t/LfvbgTZMquziqCLRFalV70CHBz3EBs+4LiywUZIroYEZsbWqMT+VECX5Y/1k
+    SyfybnizFLJsGfwaQTXwV7Lt1Y0vxnP1qoNzptx9rQKBgQDWX0y9QsbyNofESUPw
+    N2wVIiEz2U46HKFoWeZ+mGkF1SDY2rk3k8B9SeFMcRkeDJNTRIOJEKR61naYPVbq
+    e726H0Oh8aooFHKa1KQOFufGImVrcL2IJMmDHLBMZp21Zw8M4wN48gNu9TnuT8UW
+    C8frnn8D+Yv3KehERRy8qmCjqwKBgQDPNuUBORt/Xgpip9P9MxQEPWKn6siB6Q1X
+    k7CAL1hSm6S5bn1DlG7zaUWjDoL1dlTYTQZC9sRVQgux9vCppaJ6FDe57s4wEozO
+    MKLwwpMJL+QRMnbNaNYliKVp1r/oBbi8BMqm4F5bqVWYlSfqJEde98bR5qQybxRT
+    +zDbOCNKxQKBgHP4bk1c2L+j3GLFt+k2MlRkeE3SW014u6D2MYl+7iHnoLNv8A8u
+    8U1WMHnoHUxyRSkgwX/e7vw9FT9av7BubL9Jto7fa8vu8+jq7C1rGsvHQ9KR1RbX
+    v+QcGwvZ36uJK00vamt9kXnvU/2mTdqVWPwQbGo8EAoQM8TrFpbCHTGtAoGALvmJ
+    1sokcq5V+mGDjE3tBr0HxXtTMygrDyR7CcQx6KBCKotiuFRJBsNhtwJOK+lEeLiV
+    Z87bWVycnB6YFk1nVPeKXotFkN5Tr1aVSbFCdf22XTOsfQp8KYwdu62kWawaYf1Q
+    F56bpXnw3qNJpinNSDkxiFoZ9Rj7acJzI+9JCOUCgYBN6Pz40DTOuUry7Vxh0lcY
+    ujURWnZ2RyUS3ySkXSyxgmJ7U8SXwV0gaUGgDpxXDPerfn4/i4BgyFPy3xK/GsXe
+    Ppd5NXgeaayF5ENY7kPp0oXp5ZsfwpejVN8o8fpNznMclPYkbE7eA9HPUGW0e3yS
+    e1fQs5qiBpLFVjUNy8Xuqw==
+    -----END PRIVATE KEY-----
+  public-key: -----BEGIN PUBLIC KEY-----
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArYUG637BzBWrUNLb3MKP
+    YnvFuqTp3/akNn2NALDxh0TUU5zlBxSJSjsDQuEqRfYdvmizOyzbKGNhLpM5cxuZ
+    Fp8KTQvTQKF7aymoy4Z8sSzzKABSOqYfloSANV1j64uv4e3NSUxUcd0B/ermTKS2
+    kq1RWLuEnVuPKAzRN9FfVZNTgMfGSWsRvzymL6bOeqa1/hqIyjr+euyFnHabMOj4
+    FZSp90omM96mNMgvsnYK6lC/c/AgPeDSYaoOyzvRbu7t98+XvJt3SkVHohtMVHz/
+    8RMzsuqwInp5JvV81xXYI+ju/KJTLsDv3f8mUCg9j/G3nFkHAB+mHLl/kyi71A5g
+    lwIDAQAB
+    -----END PUBLIC KEY-----
 
-service:
-  host: ${SERVER_HOST}
+jle:
+  host: "*"
+  api:
+    member: http://localhost:8080/v1/members
+
+logging:
+  level:
+    root: debug

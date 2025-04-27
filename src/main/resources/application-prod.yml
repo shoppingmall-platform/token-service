@@ -1,13 +1,15 @@
-data:
-  redis:
-    host: ${DB_HOST}
-    port: 6379
-    password:
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+      password:
 
 jwt:
   private-key: ${JWT_PRIVATE_KEY}
   public-key: ${JWT_PUBLIC_KEY}
 
-
-service:
+jle:
   host: ${SERVER_HOST}
+  api:
+    member: ${API_MEMBER_URL}    #ci/cd 변수 추가해줘야함

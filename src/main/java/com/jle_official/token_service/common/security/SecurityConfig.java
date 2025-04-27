@@ -3,6 +3,7 @@ package com.jle_official.token_service.common.security;
 import com.jle_official.token_service.token.filter.JwtAuthenticationFilter;
 import com.jle_official.token_service.token.handler.JwtLogoutHandler;
 import com.jle_official.token_service.token.service.TokenService;
+import com.jle_official.token_service.token.util.JwtCookieManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -23,10 +26,23 @@ import java.util.Collections;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtLogoutHandler jwtLogoutHandler;
     private final TokenService tokenService;
+    private final JwtCookieManager jwtCookieManager;
 
-    @Value("${service.host}")
+    private final static String[] allowedUrls = {
+            "/login",
+            "/refresh",
+            "/logout"
+    };
+
+    @Value("${jle.host}")
     private String host;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -39,7 +55,7 @@ public class SecurityConfig {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOriginPatterns(Collections.singletonList("http://"+host));
+            config.setAllowedOriginPatterns(Collections.singletonList(host));
             config.setAllowCredentials(true);
             return config;
         };
@@ -50,7 +66,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/v1/token/**", "/swagger-ui").permitAll()
+                                .requestMatchers(allowedUrls).permitAll()
                 )
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -60,13 +76,18 @@ public class SecurityConfig {
                 )
         ;
 
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), tokenService);
-        jwtAuthenticationFilter.setFilterProcessesUrl("/v1/token/login");
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(
+                authenticationManager(authenticationConfiguration),
+                tokenService,
+                jwtCookieManager
+        );
+
+        jwtAuthenticationFilter.setFilterProcessesUrl(allowedUrls[0]);
         http
                 .addFilterAt(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
-                        .logoutUrl("/v1/token/logout")
-                        .addLogoutHandler(new JwtLogoutHandler(tokenService))
+                        .logoutUrl(allowedUrls[2])
+                        .addLogoutHandler(jwtLogoutHandler)
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             response.setStatus(HttpStatus.OK.value());
