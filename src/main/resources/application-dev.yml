@@ -6,8 +6,6 @@ data:
 
 #개발환경에서만 쓰는 설정
 jwt:
-  access-token-expires: 3600
-  refresh-token-expires: 86400
   private-key: -----BEGIN PRIVATE KEY-----
     MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCthQbrfsHMFatQ
     0tvcwo9ie8W6pOnf9qQ2fY0AsPGHRNRTnOUHFIlKOwNC4SpF9h2+aLM7LNsoY2Eu
@@ -50,3 +48,7 @@ jle:
   host: "*"
   api:
     member: http://localhost:8080/v1/members
+
+logging:
+  level:
+    root: debug

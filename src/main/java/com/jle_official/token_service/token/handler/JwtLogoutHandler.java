@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class JwtLogoutHandler implements LogoutHandler {
     private final TokenService tokenService;

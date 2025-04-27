@@ -73,8 +73,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         log.debug("[successfulAuthentication]");
-        log.debug("    access token= {}", token.getAccessToken());
-        log.debug("    refresh token= {}", token.getRefreshToken());
+        log.debug("    access token= {}", token.accessToken());
+        log.debug("    refresh token= {}", token.refreshToken());
 
     }
 

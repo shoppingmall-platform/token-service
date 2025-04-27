@@ -14,23 +14,22 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/token")
 public class TokenController {
     private final TokenService tokenService;
     private final JwtCookieManager jwtCookieManager;
 
     @PostMapping("/refresh")
-    public ResponseEntity<Token> refresh(HttpServletRequest request, HttpServletResponse response) {
-        String accessToken = jwtCookieManager.extractTokenFromCookies(request, "AT").orElseThrow(()-> new InvalidToken("access token 을 보내주세요"));
-        String refreshToken = jwtCookieManager.extractTokenFromCookies(request, "RT").orElseThrow(()-> new InvalidToken("refresh token 을 보내주세요"));
+    public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = jwtCookieManager.extractTokenFromCookies(request, "at").orElseThrow(()-> new InvalidToken("access token is null"));
+        String refreshToken = jwtCookieManager.extractTokenFromCookies(request, "rt").orElseThrow(()-> new InvalidToken("refresh token is null"));
 
-        log.debug("[AT] : {}", accessToken);
-        log.debug("[RT]: {}", refreshToken);
+        log.debug("[at] : {}", accessToken);
+        log.debug("[rt]: {}", refreshToken);
 
         Token newToken = tokenService.reissueToken(accessToken, refreshToken);
         jwtCookieManager.setTokenCookie(response, newToken);
 
-        return ResponseEntity.ok(newToken);
+        return ResponseEntity.ok(newToken.accessToken());
     }
 
 }
