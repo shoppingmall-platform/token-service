@@ -3,6 +3,8 @@ name: Java CI/CD with Gradle and Docker
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 env:
   DOCKER_IMAGE: codethestudent/jle-token-service:latest
@@ -49,7 +51,7 @@ jobs:
 
     steps:
       - name: Deploy to Remote Server via SSH
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEPLOY_SERVER }}
           username: ubuntu
