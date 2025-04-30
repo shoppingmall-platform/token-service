@@ -74,8 +74,7 @@ pipeline {
                             git config credential.helper store &&
                             git pull https://${GIT_USER}:${GIT_PASS}@github.com/shoppingmall-platform/docker-compose.git main &&
                             docker pull ${DOCKER_IMAGE} &&
-                            docker compose down &&
-                            docker compose up -d
+                            docker compose up -d token-service
                         '
                         """
                     }
