@@ -54,6 +54,7 @@ jobs:
           host: ${{ secrets.DEPLOY_SERVER }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
           script: |
             export TOKEN_SERVICE_PORT=${{ secrets.TOKEN_SERVICE_PORT }}
             export REDIS_HOST=${{ secrets.REDIS_HOST }}
