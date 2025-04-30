@@ -66,7 +66,7 @@ jobs:
             
             cd docker-compose
             git config credential.helper store
-            git pull https://${{ secrets.GITHUB_ID }}:${{ secrets.GITHUB_PASSWORD }}@github.com/shoppingmall-platform/docker-compose.git main
+            git pull https://${{ secrets.GIT_ID }}:${{ secrets.GIT_PASSWORD }}@github.com/shoppingmall-platform/docker-compose.git main
             
             docker pull $DOCKER_IMAGE
             docker compose pull token-service
