@@ -6,8 +6,8 @@ import com.jle_official.token_service.token.dto.Token;
 public interface TokenService {
     Token issueJwt(MemberInfo memberInfo);
 
-    Token reissueToken(String accessToken, String refreshToken);
+    Token reissueToken(String accessToken);
 
-    void blackListToken(String accessToken, String type);
+    void deleteToken(String accessToken);
 
 }

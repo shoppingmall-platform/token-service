@@ -1,9 +1,11 @@
 package com.jle_official.token_service.token.controller;
 
 import com.jle_official.token_service.common.exception.InvalidToken;
+import com.jle_official.token_service.token.dto.StatusCode;
 import com.jle_official.token_service.token.dto.Token;
 import com.jle_official.token_service.token.service.TokenService;
 import com.jle_official.token_service.token.util.JwtCookieManager;
+import com.jle_official.token_service.token.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,59 +15,53 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * TokenController는 JWT 토큰 재발급을 처리하는 REST 컨트롤러입니다.
- *
- * 클라이언트가 전송한 access token과 refresh token을 쿠키에서 추출하여
- * 새로운 access token을 발급하고, 응답 쿠키에 설정합니다.
- *
- * 토큰은 {@link JwtCookieManager}를 통해 쿠키에서 읽고 쓸 수 있으며,
- * 재발급 로직은 {@link TokenService}에서 처리됩니다.
- *
- * @author JLE
+ * 인증 관련 토큰 검증 및 재발급을 처리하는 컨트롤러.
  */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/auth")
 public class TokenController {
-
-    /** 토큰 재발급 서비스 */
-    private final TokenService tokenService;
-
-    /** JWT 쿠키 처리 유틸리티 */
     private final JwtCookieManager jwtCookieManager;
+    private final TokenService tokenService;
+    private final JwtUtils jwtUtils;
 
-    /** Access Token 쿠키 이름 (application.yml에서 주입) */
     @Value("${jle.jwt.access-token.name}")
     private String accessTokenName;
 
-    /** Refresh Token 쿠키 이름 (application.yml에서 주입) */
-    @Value("${jle.jwt.refresh-token.name}")
-    private String refreshTokenName;
+    /**
+     * 클라이언트의 Access Token 유효성을 검사합니다.
+     *
+     * @param request HTTP 요청 (쿠키에서 Access Token 추출)
+     * @return 토큰 상태 (VALID, EXPIRED, INVALID)에 따른 HTTP 응답
+     * @throws InvalidToken 토큰이 존재하지 않거나 비어 있을 경우
+     */
+    @GetMapping("/check-token")
+    public ResponseEntity<String> checkToken(HttpServletRequest request) {
+        String accessToken = jwtCookieManager.extractTokenFromCookies(request, accessTokenName).orElseThrow(()->new InvalidToken());
+        StatusCode statusCode = jwtUtils.validateToken(accessToken);
+
+        return ResponseEntity.status(statusCode.getHttpStatus()).body(statusCode.name());
+    }
+
 
     /**
-     * Access Token이 만료되었을 경우, refresh token을 이용하여 새로운 access token을 발급합니다.
+     * Refresh Token을 이용해 새로운 Access/Refresh Token을 발급하고,
+     * 쿠키에 저장합니다.
      *
-     * <p>요청에서 쿠키를 통해 access token과 refresh token을 추출하고,
-     * 유효성을 검증한 뒤 새 토큰을 재발급하여 응답 쿠키에 저장합니다.
-     *
-     * @param request  클라이언트의 HTTP 요청 (쿠키 포함)
-     * @param response 클라이언트에 전달할 HTTP 응답 (쿠키 설정 목적)
-     * @return 새로 발급된 access token (본문에 포함)
-     * @throws InvalidToken access token 또는 refresh token이 누락되었을 경우
+     * @param request  HTTP 요청 (Access Token 포함된 쿠키)
+     * @param response HTTP 응답 (새 토큰을 쿠키에 설정)
+     * @return 새로 발급된 Access Token
+     * @throws InvalidToken Access Token이 존재하지 않거나 비어 있을 경우
      */
     @PostMapping("/refresh")
     public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) {
-        String accessToken = jwtCookieManager.extractTokenFromCookies(request, accessTokenName)
-                .orElseThrow(() -> new InvalidToken("access token is null"));
-        String refreshToken = jwtCookieManager.extractTokenFromCookies(request, refreshTokenName)
-                .orElseThrow(() -> new InvalidToken("refresh token is null"));
-
+        String accessToken = jwtCookieManager.extractTokenFromCookies(request, accessTokenName).orElseThrow(()->new InvalidToken());
         log.debug("[at] : {}", accessToken);
-        log.debug("[rt]: {}", refreshToken);
 
-        Token newToken = tokenService.reissueToken(accessToken, refreshToken);
+        Token newToken = tokenService.reissueToken(accessToken);
         jwtCookieManager.setTokenCookie(response, newToken);
 
-        return ResponseEntity.ok(newToken.accessToken());
+        return ResponseEntity.ok().body(newToken.accessToken());
     }
 }
