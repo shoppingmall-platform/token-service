@@ -16,10 +16,10 @@ public class PrincipalDetailsService implements UserDetailsService {
     private final MemberAdapter memberAdapter;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MemberInfo memberInfo = memberAdapter.getMemberInfo(username);
-        String password = memberAdapter.getMemberCredential(username);
-        log.debug("member Id: {}", memberInfo.getId());
+    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+        MemberInfo memberInfo = memberAdapter.getMemberInfo(memberId);
+        String password = memberAdapter.getMemberCredential(memberId);
+        log.debug("member Id: {}", memberInfo.getMemberId());
         log.debug("password: {}", password);
 
         return new PrincipalDetails(memberInfo, password);

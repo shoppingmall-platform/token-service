@@ -3,14 +3,14 @@ POST http://localhost:8080/v1/members
 Content-Type: application/json
 
 {
-  "id": "test",
-  "password": "1234",
-  "name": "test",
-  "email": "test@test.com",
-  "birthday": "2025-03-05",
-  "phoneNumber": "010-1111-1111",
+  "memberId": "jle",
+  "password": "123!@#",
+  "name": "testjle",
+  "email": "jle@test.com",
+  "birthday": "2025-02-06",
+  "phoneNumber": "010-2244-5555",
   "gender": "FEMALE",
-  "region": "",
+  "region": "경남",
   "tosAgreement": true,
   "privacyAgreement": true,
   "marketingAgreement": true

@@ -34,22 +34,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String username;
+        String loginId;
         String password;
 
         try {
             // JSON 형식 요청일 경우
             if (request.getContentType() != null && request.getContentType().contains("application/json")) {
                 Map<String, String> requestBody = objectMapper.readValue(request.getInputStream(), Map.class);
-                username = requestBody.get("loginId");
+                loginId = requestBody.get("loginId");
                 password = requestBody.get("password");
             } else {
                 // Form 형식 요청일 경우
-                username = request.getParameter("loginId");
+                loginId = request.getParameter("loginId");
                 password = request.getParameter("password");
             }
 
-            if (username == null || password == null) {
+            if (loginId == null || password == null) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid email or password");
                 throw new LoginFailedException("Invalid loginId or password");
             }
@@ -57,8 +57,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throw new LoginFailedException("Invalid loginId or password");
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-        log.debug("[attemptAuthentication] username= {}, password= {}", username, password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginId, password);
+        log.debug("[attemptAuthentication] loginId= {}, password= {}", loginId, password);
 
         return authenticationManager.authenticate(authenticationToken);
     }
@@ -66,10 +66,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
-
         log.debug("[login success] : {}", principalDetails.getUsername());
-        Token token = tokenService.issueJwt(principalDetails.getMemberInfo());
 
+        Token token = tokenService.issueJwt(principalDetails.getMemberInfo());
         jwtCookieManager.setTokenCookie(response, token);
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
