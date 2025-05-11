@@ -29,7 +29,7 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return memberInfo.getId();
+        return memberInfo.getMemberId();
     }
 
     @Override

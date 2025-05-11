@@ -1,9 +1,11 @@
 package com.jle_official.token_service.token.service.impl;
 
+import com.jle_official.token_service.common.exception.ExpiredToken;
 import com.jle_official.token_service.common.exception.InvalidToken;
 import com.jle_official.token_service.member.adaptor.MemberAdapter;
 import com.jle_official.token_service.member.dto.MemberInfo;
 import com.jle_official.token_service.token.dao.RedisDao;
+import com.jle_official.token_service.token.dto.StatusCode;
 import com.jle_official.token_service.token.dto.Token;
 import com.jle_official.token_service.token.service.TokenService;
 import com.jle_official.token_service.token.util.JwtUtils;
@@ -22,30 +24,35 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public Token issueJwt(MemberInfo memberInfo) {
         String accessToken = jwtUtils.generateAccessToken(memberInfo);
-        String refreshToken = jwtUtils.generateRefreshToken(memberInfo.getId());
+        String refreshToken = jwtUtils.generateRefreshToken(memberInfo.getMemberId());
         Duration expiration = jwtUtils.extractExpirationTime(refreshToken);
 
-        redisDao.saveToken(memberInfo.getId(), refreshToken, expiration);
+        redisDao.saveToken(accessToken, refreshToken, expiration);
         return new Token(accessToken, refreshToken);
     }
 
     @Override
-    public Token reissueToken(String accessToken, String refreshToken) {
-        String memberId = jwtUtils.extractMemberId(refreshToken);
-        String storedToken = redisDao.getToken(memberId);
+    public Token reissueToken(String accessToken) {
+        String refreshToken = redisDao.getToken(accessToken);
+        StatusCode refreshTokenStatusCode = jwtUtils.validateToken(refreshToken);
+        if (StatusCode.VALID.equals(refreshTokenStatusCode)) {
 
-        if (jwtUtils.validateToken(refreshToken, storedToken)) {
+            String memberId = jwtUtils.extractMemberId(refreshToken);
             MemberInfo memberInfo = memberAdapter.getMemberInfo(memberId);
+
+            deleteToken(accessToken);
+
             return issueJwt(memberInfo);
+        } else if (StatusCode.EXPIRED.equals(refreshTokenStatusCode)) {
+            throw new ExpiredToken();
         } else {
             throw new InvalidToken();
         }
     }
 
     @Override
-    public void blackListToken(String accessToken, String type) {
-        redisDao.saveToken(accessToken, type, jwtUtils.extractExpirationTime(accessToken));
-        redisDao.deleteToken(jwtUtils.extractMemberId(accessToken));
+    public void deleteToken(String accessToken) {
+        redisDao.deleteToken(accessToken);
     }
 
 

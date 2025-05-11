@@ -32,7 +32,7 @@ public class SecurityConfig {
 
     private final static String[] allowedUrls = {
             "/login",
-            "/refresh",
+            "/auth/*",
             "/logout"
     };
 
