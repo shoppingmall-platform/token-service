@@ -82,6 +82,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         log.debug("[unsuccessfulAuthentication] username= {}", request.getRemoteUser());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().write("login failed");
+        response.getWriter().write("login failed:"+ failed.getMessage());
     }
 }
