@@ -39,7 +39,7 @@ public class MemberAdapter {
     public MemberInfo getMemberInfo(String loginId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-USER-ID", loginId);
+        headers.set("X-MEMBER-ID", loginId);
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         ResponseEntity<MemberInfo> response = restTemplate.exchange(
