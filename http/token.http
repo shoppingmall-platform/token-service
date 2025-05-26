@@ -11,6 +11,15 @@ Content-Type: application/json
 GET http://localhost:8082/auth/check-token
 Cookie: at=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJqbGUiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NDY5NzM3ODUsImV4cCI6MTc0Njk3Mzg0NX0.jtnz0KyqGX3iMEKlCGpCq833LGujY2rR9Pqw-Gd_9u-LNfr8fq24pX860gdcqq_A8iMuhDzPimqENEY9pPvZB5E_lnb_4o304JH9tJkHHX-okSdE_ON4zuy1wKjYB5lJzyEgFzY9BqVzueT6M8zM0xgvGNoa7nnaNGjPXYqCsgu77aVIJVROfFQpIeqTUK68b0oPVLlUGX6K0GnNT0NuguS3XytYp-QwryIvz5ElqXhTVtWuFmdRVWwtf4cG7c14Vr43bSe3zIr342x4c0i3JHbS2o_k025aVMvtY5S-E7iR4i0dLLqfFHxQMrrARheOgC-mBK_4AY1epDqfSRguCg
 
+### login
+POST http://localhost:8082/login
+Content-Type: application/json
+
+{
+  "loginId": "test",
+  "password": "1234"
+}
+
 ### refresh
 POST http://localhost:8082/auth/refresh
 Content-Type: application/json
