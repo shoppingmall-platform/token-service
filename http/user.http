@@ -15,3 +15,20 @@ Content-Type: application/json
   "privacyAgreement": true,
   "marketingAgreement": true
 }
+현
+### 5. 멤버 수정
+PUT http://localhost:8080/v1/members/test
+Content-Type: application/json
+
+{
+  "name": "이순신",
+  "birthday": "1985-05-05",
+  "phoneNumber": "010-9876-5432",
+  "gender": "MALE",
+  "status": "INACTIVE",
+  "level": "NEW",
+  "region": "Busan",
+  "tosAgreement": true,
+  "privacyAgreement": true,
+  "marketingAgreement": true
+}
