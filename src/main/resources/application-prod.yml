@@ -19,7 +19,7 @@ jle:
 
 logging:
   file:
-    name: ~/data/log/token.log
+    name: /data/log/token.log
   logback:
     rollingpolicy:
       max-file-size: 10MB
