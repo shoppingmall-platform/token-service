@@ -38,7 +38,7 @@ public class JwtCookieManager {
     public void setTokenCookie(HttpServletResponse response, Token token) {
         ResponseCookie accessTokenCookie = ResponseCookie.from(accessTokenName, token.accessToken())
                 .path("/")
-                .httpOnly(true)
+//                .httpOnly(true)
                 .sameSite("Strict")
                 .maxAge(cookieExpires)
                 .build();
