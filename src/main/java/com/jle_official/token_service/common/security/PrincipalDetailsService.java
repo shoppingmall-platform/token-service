@@ -22,6 +22,9 @@ public class PrincipalDetailsService implements UserDetailsService {
 
         try{
             memberInfo = memberAdapter.getMemberInfo(memberId);
+            if (!memberInfo.getStatus().equals("ACTIVE")) {
+                throw new MemberAdapterException("Inactive member status: " + memberInfo.getStatus());
+            }
             password = memberAdapter.getMemberCredential(memberId);
             log.debug("member Id: {}", memberInfo.getMemberId());
             log.debug("password: {}", password);
